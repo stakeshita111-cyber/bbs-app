@@ -17,7 +17,7 @@ export default function SignupPage() {
     if (result && result.error) {
       setError(result.error); // エラーメッセージを表示
     } else {
-      router.push('/login'); // 成功した場合はログインページにリダイレクト
+      router.push('/'); // 成功した場合はトップページにリダイレクト
     }
   };
 

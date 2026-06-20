@@ -44,7 +44,7 @@ export default function LoginPage() {
         <p style={{ textAlign: 'center', fontSize: '14px' }}>
           アカウントをお持ちでないですか？
           <br />
-          <Link href='#' style={{ color: '#0070f3' }}>
+          <Link href='/signup' style={{ color: '#0070f3' }}>
             新規登録はこちら
           </Link>
         </p>

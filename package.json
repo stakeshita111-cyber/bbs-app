@@ -9,7 +9,7 @@
     "lint": "eslint",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate",
-    "migration:run": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"experimentalDecorators\\\":true,\\\"emitDecoratorMetadata\\\":true}\" ./node_modules/typeorm/cli.js migration:run"
+    "migration:run": "typeorm-ts-node-commonjs migration:run"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
