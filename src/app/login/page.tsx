@@ -1,11 +1,29 @@
+"use client";
+
 import Link from 'next/link';
+import { useState } from 'react';
+import { login } from '@/actions/auth';
 
 export default function LoginPage() {
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await login(formData);
+
+    if (result?.error) {
+      setError(result.error);
+    }
+  };
+
   return (
     <div className='container' style={{ maxWidth: '400px', marginTop: '50px' }}>
       <div className='card'>
         <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>ログイン</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className='form-group'>
             <label className='form-label' htmlFor='email'>
               メールアドレス
@@ -32,7 +50,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          {/* {error && <p className='error-message'>{error}</p>} */}
+          {error && <p className='error-message'>{error}</p>}
           <button
             type='submit'
             className='btn'

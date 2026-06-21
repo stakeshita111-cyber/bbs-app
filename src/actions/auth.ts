@@ -34,7 +34,8 @@ export async function signup(formData: FormData) {
       password: hashedPassword,
     });
 
-    await userRepository.save(newUser);
+    const saveUser = await userRepository.save(newUser);
+    await createSession(saveUser.id.toString());
     return null; // 成功時はnullを返す
   } catch (e) {
     console.error(e);
@@ -42,24 +43,28 @@ export async function signup(formData: FormData) {
   }
 }
 
-// export async function login(formData: FormData) {
-//   try {
-//     const userRepository = await getRepository(User);
-//     const user = await userRepository.findOneBy({ email });
+export async function login(formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  
+  try {
+    const userRepository = await getRepository(User);
+    const user = await userRepository.findOneBy({ email });
 
-//     if (!user) {
-//       return { error: 'メールアドレスまたはパスワードが正しくありません' };
-//     }
+    if (!user) {
+      return { error: 'メールアドレスまたはパスワードが正しくありません' };
+    }
 
-//     const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-//     if (!passwordMatch) {
-//       return { error: 'メールアドレスまたはパスワードが正しくありません' };
-//     }
+    if (!passwordMatch) {
+      return { error: 'メールアドレスまたはパスワードが正しくありません' };
+    }
 
-//     await createSession(user.id.toString());
-//   } catch (e) {
-//     console.error(e);
-//     return { error: 'ログイン中にエラーが発生しました' };
-//   }
-// }
+    await createSession(user.id.toString());
+  } catch (e) {
+    console.error(e);
+    return { error: 'ログイン中にエラーが発生しました' };
+  }
+  redirect('/');
+}
