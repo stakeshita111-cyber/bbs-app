@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { verifySession } from '@/utils/session';
+import { logout } from '@/actions/auth';
 
-export default function Header() {
+export default async function Header() {
+  const session = await verifySession();
+
   return (
     <header
       style={{ backgroundColor: '#333', color: '#fff', padding: '15px 0' }}
@@ -14,30 +18,43 @@ export default function Header() {
         }}
       >
         <h1>
-          <Link href='#' style={{ fontSize: '24px', fontWeight: 'bold' }}>
+          <Link href='/' style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', textDecoration: 'none' }}>
             BBS App
           </Link>
         </h1>
-        {/* <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <Link href='#' style={{ fontWeight: 'bold' }}>
-              投稿する
-            </Link>
-            <form>
-              <button
-                type='submit'
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                }}
-              >
-                ログアウト
-              </button>
-            </form>
-          </nav> */}
+        <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          {session ? (
+            <>
+              <Link href='/posts/create' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
+                投稿する
+              </Link>
+              <form action={logout}>
+                <button
+                  type='submit'
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                  }}
+                >
+                  ログアウト
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link href='/login' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
+                ログイン
+              </Link>
+              <Link href='/signup' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
+                新規登録
+              </Link>
+            </>
+          )}
+        </nav>
       </div>
     </header>
   );
