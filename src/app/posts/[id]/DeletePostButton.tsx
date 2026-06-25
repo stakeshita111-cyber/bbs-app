@@ -1,25 +1,30 @@
 'use client';
 
 import { deletePost } from '@/actions/post';
-import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 
 export default function DeletePostButton({ id }: { id: number }) {
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirm('本当に削除しますか？')) return;
-    const result = await deletePost(id);
-    if (result && result.error) {
-      alert(result.error);
-    } else {
-      router.push('/');
-      router.refresh();
-    }
+
+    startTransition(async () => {
+      const result = await deletePost(id);
+      if (result && result.error) {
+        alert(result.error);
+      }
+    });
   };
 
   return (
-    <button className='btn-danger' onClick={handleDelete}>
-      削除
+    <button
+      className='btn-danger'
+      onClick={handleDelete}
+      disabled={isPending}
+      style={{ opacity: isPending ? 0.7 : 1, cursor: isPending ? 'not-allowed' : 'pointer' }}
+    >
+      {isPending ? '削除中...' : '削除'}
     </button>
   );
 }

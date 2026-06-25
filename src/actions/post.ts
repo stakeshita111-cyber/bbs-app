@@ -37,6 +37,7 @@ export async function createPost(formData: FormData) {
     });
 
     await postRepository.save(newPost);
+    revalidateTag('posts');
     return { success: true };
   } catch (e) {
     console.error(e);
@@ -45,6 +46,8 @@ export async function createPost(formData: FormData) {
 }
 
 export async function getPosts() {
+  'use cache';
+  cacheTag('posts');
   const postRepository = await getRepository(Post);
 
   // 投稿一覧を取得（作成日時の降順）
@@ -64,6 +67,8 @@ export async function getPosts() {
 }
 
 export async function getPost(id: number) {
+  'use cache';
+  cacheTag(`post-${id}`);
   const postRepository = await getRepository(Post);
 
   const post = await postRepository.findOne({
@@ -102,5 +107,7 @@ export async function deletePost(id: number) {
   }
 
   await postRepository.remove(post);
-  return { success: true };
+  revalidateTag('posts');
+  revalidateTag(`post-${id}`);
+  redirect('/');
 }
