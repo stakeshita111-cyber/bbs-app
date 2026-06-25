@@ -12,20 +12,19 @@ if(posts.length === 0) {
   );
 }
 
-
   return (
     <div className='post-list'>
-      {posts.map((post) => (
+      {posts.map((post.id) => (
         <div key={post.id} className='card'>
-          <h3 className='post-title'>
-            <Link href={`/posts/${post.id}`}>{post.title}</Link>
-          </h3>
-          <p className='post-meta'>
-            投稿者: {post.user?.userName || '不明'} | 作成日: {new Date(post.createdAt).toLocaleString()}
-          </p>
-          <p className='post-content'>{post.content}</p>
-        </div>
-      ))}
-    </div>
+        <h3 className='post-title'>
+          <Link href={`/posts/${post.id}`}>{post.title}</Link>
+        </h3>
+        <p className='post-meta'>
+          投稿者: {post.user.userName} | 作成日: 
+          {new Date(post.createdAt).toLocaleDateString()}
+        </p>
+        <p className='post-content'>{post.content}</p>
+      </div>
+      
   );
 }

@@ -37,17 +37,20 @@ export async function createPost(formData: FormData) {
     });
 
     await postRepository.save(newPost);
-    revalidateTag('posts');
     return { success: true };
   } catch (e) {
     console.error(e);
     return { error: '投稿の作成中にエラーが発生しました' };
   }
+
+  revalidateTag('posts','max');
+  redirect('/');
+
 }
 
 export async function getPosts() {
-  'use cache';
-  cacheTag('posts');
+    'use cache';
+    cacheTag('posts');
   const postRepository = await getRepository(Post);
 
   // 投稿一覧を取得（作成日時の降順）
@@ -67,8 +70,9 @@ export async function getPosts() {
 }
 
 export async function getPost(id: number) {
-  'use cache';
+'use cache';
   cacheTag(`post-${id}`);
+
   const postRepository = await getRepository(Post);
 
   const post = await postRepository.findOne({
@@ -86,10 +90,10 @@ export async function getPost(id: number) {
 }
 
 export async function deletePost(id: number) {
-  const session = await verifySession();
-  if (!session || !session.userId) {
-    return { error: 'ログインが必要です' };
-  }
+	const session = await verifySession();
+	if (!session || !session.userId) {
+			return { error: 'ログインが必要です' };
+		}
 
   const postRepository = await getRepository(Post);
   const post = await postRepository.findOne({
@@ -107,7 +111,9 @@ export async function deletePost(id: number) {
   }
 
   await postRepository.remove(post);
-  revalidateTag('posts');
-  revalidateTag(`post-${id}`);
-  redirect('/');
+
+
+	revalidateTag('posts','max');
+	revalidateTag(`post-${id}`,'max');
+	redirect('/');
 }
