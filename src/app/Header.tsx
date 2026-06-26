@@ -1,9 +1,19 @@
+'use client';
+
 import Link from 'next/link';
-import { verifySession } from '@/utils/session';
+import { usePathname } from 'next/navigation';
 import { logout } from '@/actions/auth';
 
-export default async function Header() {
-  const session = await verifySession();
+interface HeaderProps {
+  session: {
+    isAuth: boolean;
+    userId: string;
+  } | null;
+}
+
+export default function Header({ session }: HeaderProps) {
+  const pathname = usePathname();
+  const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/signin';
 
   return (
     <header
@@ -45,14 +55,16 @@ export default async function Header() {
               </form>
             </>
           ) : (
-            <>
-              <Link href='/login' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
-                ログイン
-              </Link>
-              <Link href='/signup' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
-                新規登録
-              </Link>
-            </>
+            !isAuthPage && (
+              <>
+                <Link href='/login' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
+                  ログイン
+                </Link>
+                <Link href='/signup' style={{ color: '#fff', fontWeight: 'bold', textDecoration: 'none' }}>
+                  新規登録
+                </Link>
+              </>
+            )
           )}
         </nav>
       </div>
