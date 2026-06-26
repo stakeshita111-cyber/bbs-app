@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { revalidateTag, cacheTag, updateTag } from 'next/cache';
+import { revalidateTag, cacheTag } from 'next/cache';
 import { AppDataSource, getRepository } from '@/utils/data-source';
 import { Post } from '@/entities/Post';
 import { verifySession } from '@/utils/session';
@@ -37,16 +37,13 @@ export async function createPost(formData: FormData) {
     });
 
     await postRepository.save(newPost);
-    revalidateTag('posts');
+    revalidateTag('posts', 'max');
     return { success: true };
   } catch (e) {
     console.error(e);
     return { error: '投稿の作成中にエラーが発生しました' };
   }
-	updateTag('posts','max')
-	redirect('/')
 }
-
 
 export async function getPosts() {
   'use cache';
@@ -110,7 +107,7 @@ export async function deletePost(id: number) {
   }
 
   await postRepository.remove(post);
-  updateTag('posts');
-  updateTag('posts');
+  revalidateTag('posts', 'max');
+  revalidateTag(`post-${id}`, 'max');
   redirect('/');
 }
