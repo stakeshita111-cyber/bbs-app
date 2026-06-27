@@ -4,6 +4,8 @@ import { getPost } from '@/actions/post';
 import { verifySession } from '@/utils/session';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PostDetailPage({
   params,
 }: {
