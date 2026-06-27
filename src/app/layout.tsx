@@ -1,18 +1,18 @@
 import './globals.css';
-import Header from './Header';
-import { verifySession } from '@/utils/session';
+import Header, { HeaderFallback } from './Header';
+import { Suspense } from 'react';
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await verifySession();
-
   return (
     <html lang="ja">
       <body>
-        <Header session={session} />
+        <Suspense fallback={<HeaderFallback />}>
+          <Header />
+        </Suspense>
         <main className="container" style={{ padding: '40px 20px' }}>
           {children}
         </main>
