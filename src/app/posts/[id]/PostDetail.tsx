@@ -1,4 +1,5 @@
-import DeletePostButton from './DeletePostButton';
+import { Suspense } from 'react';
+import DeletePostSection from './DeletePostSection';
 
 interface PostDetailProps {
   post: {
@@ -11,10 +12,9 @@ interface PostDetailProps {
       userName: string;
     };
   };
-  isOwner: boolean;
 }
 
-export default function PostDetail({ post, isOwner }: PostDetailProps) {
+export default function PostDetail({ post }: PostDetailProps) {
   return (
     <>
       <div className='card'>
@@ -37,11 +37,9 @@ export default function PostDetail({ post, isOwner }: PostDetailProps) {
         </div>
       </div>
 
-      {isOwner && (
-        <div style={{ marginTop: '20px' }}>
-          <DeletePostButton id={post.id} />
-        </div>
-      )}
+      <Suspense fallback={null}>
+        <DeletePostSection postId={post.id} postOwnerId={post.user.id} />
+      </Suspense>
     </>
   );
 }

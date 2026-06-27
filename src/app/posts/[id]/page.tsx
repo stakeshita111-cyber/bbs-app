@@ -1,10 +1,7 @@
 import Link from 'next/link';
 import PostDetail from './PostDetail';
 import { getPost } from '@/actions/post';
-import { verifySession } from '@/utils/session';
 import { notFound } from 'next/navigation';
-
-export const dynamic = 'force-dynamic';
 
 export default async function PostDetailPage({
   params,
@@ -17,9 +14,6 @@ export default async function PostDetailPage({
   if (!post) {
     notFound();
   }
-
-  const session = await verifySession();
-  const isOwner = session && Number(session.userId) === post.user.id;
 
   return (
     <div className='container' style={{ maxWidth: '800px', marginTop: '30px' }}>
@@ -34,7 +28,7 @@ export default async function PostDetailPage({
         &larr; 一覧に戻る
       </Link>
 
-      <PostDetail post={post} isOwner={!!isOwner} />
+      <PostDetail post={post} />
     </div>
   );
 }
